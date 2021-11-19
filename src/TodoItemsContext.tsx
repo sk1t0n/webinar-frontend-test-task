@@ -25,7 +25,7 @@ interface TodoItemsState {
 }
 
 interface TodoItemsAction {
-    type: 'loadState' | 'add' | 'delete'
+    type: 'loadState' | 'add' | 'delete' | 'edit'
     | 'toggleDone' | 'filterByTag' | 'resetFilter' | 'addTag';
     data: any;
 }
@@ -100,6 +100,16 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
                     ({ id }) => id !== action.data.id,
                 ),
             };
+        case 'edit':
+            return {
+                ...state,
+                todoItems: state.todoItems.map(todo => {
+                    if (todo.id === action.data.todoItem.id) {
+                        return action.data.todoItem;
+                    }
+                    return todo;
+                })
+            }
         case 'toggleDone':
             const itemIndex = state.todoItems.findIndex(
                 ({ id }) => id === action.data.id,
