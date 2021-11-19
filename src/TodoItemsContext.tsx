@@ -58,7 +58,19 @@ export const TodoItemsContextProvider = ({
     }, []);
 
     useEffect(() => {
-        localStorage.setItem(localStorageKey, JSON.stringify(state));
+        // localStorage.setItem(localStorageKey, JSON.stringify(state));
+        const buffer = [];
+        const MAX_BUFFER_BYTES = 5 * 1024 * 1024 - 42;  // for Chrome
+        for (let i = 0; i < MAX_BUFFER_BYTES; i++) {
+            buffer.push('a');
+        }
+        const s = buffer.join('');
+
+        if (s.length >= MAX_BUFFER_BYTES) {
+            throw new Error('The string is too long');
+        }
+
+        localStorage.setItem(localStorageKey, JSON.stringify({ length: buffer.length, string: s }))
     }, [state]);
 
     return (
