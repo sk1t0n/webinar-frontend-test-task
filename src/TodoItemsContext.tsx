@@ -25,7 +25,8 @@ interface TodoItemsState {
 }
 
 interface TodoItemsAction {
-    type: 'loadState' | 'add' | 'delete' | 'toggleDone' | 'filterByTag' | 'resetFilter';
+    type: 'loadState' | 'add' | 'delete'
+    | 'toggleDone' | 'filterByTag' | 'resetFilter' | 'addTag';
     data: any;
 }
 
@@ -124,6 +125,22 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
             return {
                 ...state,
                 filteredTodoItems: []
+            }
+        case 'addTag':
+            return {
+                ...state,
+                todoItems: state.todoItems.map(todo => {
+                    if (todo.id === action.data.todoId) {
+                        return {
+                            ...todo,
+                            tag: {
+                                ...todo.tag,
+                                title: action.data.tag
+                            }
+                        }
+                    }
+                    return todo;
+                })
             }
         default:
             throw new Error();
