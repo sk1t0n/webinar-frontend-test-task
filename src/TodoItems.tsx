@@ -27,8 +27,7 @@ const useTodoItemListStyles = makeStyles({
 });
 
 export const TodoItemsList = function () {
-    const { todoItems } = useTodoItems();
-
+    const { todoItems, filteredTodoItems } = useTodoItems();
     const classes = useTodoItemListStyles();
 
     const sortedItems = todoItems.slice().sort((a, b) => {
@@ -43,9 +42,11 @@ export const TodoItemsList = function () {
         return 0;
     });
 
+    const items = filteredTodoItems.length > 0 ? filteredTodoItems : sortedItems;
+
     return (
         <ul className={classes.root}>
-            {sortedItems.map((item) => (
+            {items.map((item) => (
                 <motion.li key={item.id} transition={spring} layout={true}>
                     <TodoItemCard item={item} />
                 </motion.li>

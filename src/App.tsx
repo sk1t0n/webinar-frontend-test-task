@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { TodoItemsList } from './TodoItems';
 import { TodoItemsContextProvider } from './TodoItemsContext';
 import TodoItemForm from './TodoItemForm';
+import TodoFilter from './TodoFilter';
 
 const theme = createMuiTheme({
     palette: {
@@ -35,6 +36,7 @@ function Content() {
                 <Typography variant="h2" component="h1">
                     Todo List
                 </Typography>
+                <TodoFilter />
             </header>
             <main>
                 <TodoItemForm />

@@ -6,19 +6,26 @@ import {
     useReducer,
 } from 'react';
 
+
+export interface Tag {
+    id: string;
+    title: string;
+}
 export interface TodoItem {
     id: string;
     title: string;
     details?: string;
     done: boolean;
+    tag: Tag;
 }
 
 interface TodoItemsState {
     todoItems: TodoItem[];
+    filteredTodoItems: TodoItem[];
 }
 
 interface TodoItemsAction {
-    type: 'loadState' | 'add' | 'delete' | 'toggleDone';
+    type: 'loadState' | 'add' | 'delete' | 'toggleDone' | 'filterByTag' | 'resetFilter';
     data: any;
 }
 
@@ -26,7 +33,10 @@ const TodoItemsContext = createContext<
     (TodoItemsState & { dispatch: (action: TodoItemsAction) => void }) | null
 >(null);
 
-const defaultState = { todoItems: [] };
+const defaultState = {
+    todoItems: [],
+    filteredTodoItems: []
+};
 const localStorageKey = 'todoListState';
 
 export const TodoItemsContextProvider = ({
@@ -42,7 +52,7 @@ export const TodoItemsContextProvider = ({
         if (savedState) {
             try {
                 dispatch({ type: 'loadState', data: JSON.parse(savedState) });
-            } catch {}
+            } catch { }
         }
     }, []);
 
@@ -103,6 +113,18 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
                     ...state.todoItems.slice(itemIndex + 1),
                 ],
             };
+        case 'filterByTag':
+            return {
+                ...state,
+                filteredTodoItems: state.todoItems.filter(({ tag }) => (
+                    tag && tag.title.toLowerCase() === action.data.tag?.toLowerCase()
+                ))
+            }
+        case 'resetFilter':
+            return {
+                ...state,
+                filteredTodoItems: []
+            }
         default:
             throw new Error();
     }
